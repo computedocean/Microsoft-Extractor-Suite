@@ -317,7 +317,9 @@ function Get-GraphEntraSignInLogs {
 					
 					$from =  $dates | Select-Object -First 1
 					$to = ($dates | Select-Object -Last 1)
-					Write-LogFile -Message "[INFO] Retrieved $currentBatchCount records between $from and $to" -Level Standard -Color "Green"
+					$current = [datetime]::Parse($from, [System.Globalization.CultureInfo]::InvariantCulture)
+					$progress = [math]::round(($script:EndDate - $current).TotalSeconds / ($script:EndDate - $script:StartDate).TotalSeconds * 100, 2)
+					Write-LogFile -Message "[INFO] Retrieved $currentBatchCount records between $from and $to ($progress%)" -Level Standard -Color "Green"
 				}
 				$apiUrl = $responseJson.'@odata.nextLink'
 			} While ($apiUrl)
@@ -555,7 +557,9 @@ function Get-GraphEntraAuditLogs {
                 $from =  $dates | Select-Object -First 1
                 $fromstr =  $from.ToString('yyyy-MM-ddTHH:mmZ')
                 $to = ($dates | Select-Object -Last 1).ToString('yyyy-MM-ddTHH:mmZ')
-				Write-LogFile -Message "[INFO] Retrieved $currentBatchCount records between $fromstr and $to" -Level Standard -Color "Green"
+				$current = [datetime]::Parse($from, [System.Globalization.CultureInfo]::InvariantCulture)
+				$progress = [math]::round(($script:EndDate - $current).TotalSeconds / ($script:EndDate - $script:StartDate).TotalSeconds * 100, 2)
+				Write-LogFile -Message "[INFO] Retrieved $currentBatchCount records between $fromstr and $to ($progress%)" -Level Standard -Color "Green"
 			}
 			$apiUrl = $responseJson.'@odata.nextLink'
 		} While ($apiUrl)
